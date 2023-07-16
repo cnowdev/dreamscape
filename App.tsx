@@ -6,6 +6,7 @@ import { useFonts, Quicksand_400Regular, Quicksand_700Bold  } from '@expo-google
 import { Header } from '@rneui/themed'
 import { Ionicons } from '@expo/vector-icons'; 
 import { Feather } from '@expo/vector-icons'; 
+import Dream from './components/dream'
 
 
 export default function App() {
