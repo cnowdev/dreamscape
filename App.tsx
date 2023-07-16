@@ -4,6 +4,7 @@ import { useFonts, Quicksand_400Regular, Quicksand_700Bold  } from '@expo-google
 import { Header } from '@rneui/themed'
 import { Ionicons } from '@expo/vector-icons'; 
 import { Feather } from '@expo/vector-icons'; 
+import Dream from './components/dream'
 
 
 
@@ -26,6 +27,9 @@ export default function App() {
         
       />
       <Text style={{fontFamily: 'Quicksand_400Regular', fontSize: 30, marginTop: 20, color: '#fff'}}>Open up App.tsx to start working on your app!</Text>
+      <Dream title="Description Title" description="This is a sample description." />
+      <Dream title="Description Title" description="This is a sample description." />
+      <Dream title="Description Title" description="This is a sample description." />
       <StatusBar style="light" translucent />
     </View>
   );
