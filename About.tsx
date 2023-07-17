@@ -17,14 +17,6 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Header
-        backgroundColor='#040F16'
-        centerComponent={{text: 'Dreamscape', style: {color: '#fff', fontFamily: 'Quicksand_700Bold', fontSize: 30, marginTop: 25, fontWeight: 'bold'}}}
-        leftComponent={<Ionicons name="md-reorder-three-outline" size={24} color="white" style={{marginTop: 30, paddingLeft: 20}} />}
-        rightComponent={<Feather name="search" size={24} color="white" style={{marginTop: 30, paddingRight: 20}} />}
-        containerStyle={{height: 100, justifyContent: 'center', borderBottomWidth: 0}}
-        
-      />
       <Text style={{fontFamily: 'Quicksand_400Regular', fontSize: 30, marginTop: 20, color: '#fff'}}>About</Text>
       <StatusBar style="light" translucent hidden={true} />
     </View>
