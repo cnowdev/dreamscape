@@ -10,10 +10,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
 
+type ProfileProps = NativeStackScreenProps<RootStackParamList, "Dreams">;
 
 
-
-export default function Dreams({ navigation, route }: any) {
+export default function Dreams({ navigation, route }: ProfileProps) {
   let [fontsLoaded] = useFonts({
     Quicksand_400Regular,
     Quicksand_700Bold
@@ -28,7 +28,9 @@ export default function Dreams({ navigation, route }: any) {
       <Dream title="Description Title" description="This is a sample description." />
       <StatusBar style="light" translucent />
       <View style={styles.circleButtonContainer}>
-      <Pressable style={styles.circleButton} onPress={() => navigation.navigate('DreamEditor')}>
+      <Pressable style={styles.circleButton} onPress={() => navigation.navigate('DreamEditor', {
+        id: 'test'
+      })}>
         <MaterialCommunityIcons name="pencil" size={32} color="white" />
       </Pressable>
     </View>

@@ -40,8 +40,12 @@ export default function SideDrawer() {
       }
        
     })}>
+        {/*
+          @ts-ignore */}
         <Drawer.Screen name="Dreams" component={Dreams}/>
         <Drawer.Screen name="About" component={About} />
+                {/*
+          @ts-ignore */}
         <Drawer.Screen name="DreamEditor" component={DreamEditor} options={{
           drawerItemStyle: {height: 0}
         }} />

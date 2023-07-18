@@ -17,8 +17,8 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={{fontFamily: 'Quicksand_400Regular', fontSize: 30, marginTop: 20, color: '#fff'}}>About</Text>
-      <StatusBar style="light" translucent hidden={true} />
+      <Text style={{fontFamily: 'Quicksand_400Regular', fontSize: 30, color: '#fff'}}>About</Text>
+      <StatusBar style="light" translucent />
     </View>
   );
 }

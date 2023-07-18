@@ -5,3 +5,4 @@ export type RootStackParamList = {
     About: undefined,
     DreamEditor: {id: string} | undefined
 }
+

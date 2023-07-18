@@ -1,19 +1,21 @@
 import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
 import { RootStackParamList } from './types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RouteProp } from '@react-navigation/native';
 
 
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
 interface Props {
-    id?: string,
-    navigation: navigationProps['navigation']
+    navigation: navigationProps['navigation'],
+    route: RouteProp<{ params: { id: string } }, 'params'>
 }
 
-export default function DreamEditor({navigation, id}: Props ) {
+export default function DreamEditor({navigation, route}: Props ) {
+  const { id } = route.params
   return (
     <View style={styles.container}>
-        <Text style={{color: '#fff'}}>Test</Text>
+        <Text style={{color: '#fff'}}>{id}</Text>
         <TextInput></TextInput>
     </View>
   )
