@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons'; 
 import Dream from './components/dream'
 import { createStackNavigator } from '@react-navigation/stack';
+import DreamEditor from "./DreamEditor";
 
 const Stack = createStackNavigator();
 
@@ -22,7 +23,28 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <SideDrawer />
+      <Stack.Navigator>
+        <Stack.Screen name="Something" component={Something} options={{headerShown: false}}/>
+          {/*
+          @ts-ignore */}
+        <Stack.Screen name="DreamEditor" component={DreamEditor} options={{
+          headerStyle: {
+            backgroundColor: '#040F16', 
+            shadowColor: 'transparent',
+          },
+          headerTintColor: '#fff',
+          headerTitle: '',
+          headerBackTitleVisible: false
+        }}/>
+      </Stack.Navigator>
     </NavigationContainer>
   );
+}
+
+function Something() {
+  return (
+
+      <SideDrawer />
+
+  )
 }

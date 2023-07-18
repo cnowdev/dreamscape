@@ -46,9 +46,6 @@ export default function SideDrawer() {
         <Drawer.Screen name="About" component={About} />
                 {/*
           @ts-ignore */}
-        <Drawer.Screen name="DreamEditor" component={DreamEditor} options={{
-          drawerItemStyle: {height: 0}
-        }} />
     </Drawer.Navigator>
   )
 }

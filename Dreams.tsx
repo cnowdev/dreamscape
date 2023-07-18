@@ -23,10 +23,10 @@ export default function Dreams({ navigation, route }: ProfileProps) {
 
   return (
     <View style={styles.container}>
-      <Dream title="Description Title" description="This is a sample description." onPress={() => navigation.navigate('DreamEditor', {
+      <Dream title="My dream" description="I had a dream about something." onPress={() => navigation.navigate('DreamEditor', {
         id: '1',
-        title: 'Title',
-        description: 'Description'
+        title: 'My dream',
+        description: 'I had a dream about something.'
       })} />
       <Dream title="Description Title" description="This is a sample description." />
       <Dream title="Description Title" description="This is a sample description." />
