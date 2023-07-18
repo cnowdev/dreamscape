@@ -23,14 +23,16 @@ export default function Dreams({ navigation, route }: ProfileProps) {
 
   return (
     <View style={styles.container}>
-      <Dream title="Description Title" description="This is a sample description." />
+      <Dream title="Description Title" description="This is a sample description." onPress={() => navigation.navigate('DreamEditor', {
+        id: '1',
+        title: 'Title',
+        description: 'Description'
+      })} />
       <Dream title="Description Title" description="This is a sample description." />
       <Dream title="Description Title" description="This is a sample description." />
       <StatusBar style="light" translucent />
       <View style={styles.circleButtonContainer}>
-      <Pressable style={styles.circleButton} onPress={() => navigation.navigate('DreamEditor', {
-        id: 'test'
-      })}>
+      <Pressable style={styles.circleButton} onPress={() => navigation.navigate('DreamEditor')}>
         <MaterialCommunityIcons name="pencil" size={32} color="white" />
       </Pressable>
     </View>

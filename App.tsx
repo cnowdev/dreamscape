@@ -7,7 +7,9 @@ import { Header } from '@rneui/themed'
 import { Ionicons } from '@expo/vector-icons'; 
 import { Feather } from '@expo/vector-icons'; 
 import Dream from './components/dream'
+import { createStackNavigator } from '@react-navigation/stack';
 
+const Stack = createStackNavigator();
 
 export default function App() {
 

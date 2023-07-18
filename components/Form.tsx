@@ -5,11 +5,11 @@ const Form = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleTitleChange = (text) => {
+  const handleTitleChange = (text: string) => {
     setTitle(text);
   };
 
-  const handleDescriptionChange = (text) => {
+  const handleDescriptionChange = (text: string) => {
     setDescription(text);
   };
 

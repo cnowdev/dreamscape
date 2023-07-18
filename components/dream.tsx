@@ -1,21 +1,24 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Pressable, StyleSheet } from 'react-native';
 
 interface Props {
   title: string;
   description: string;
+  onPress?: () => void;
 }
 
-const Dream: React.FC<Props> = ({ title, description }) => {
+const Dream: React.FC<Props> = ({ title, description, onPress }) => {
   return (
+    <Pressable onPress={onPress}>
     <View style={styles.descriptionBox}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
     </View>
+    </Pressable>
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   descriptionBox: {
     width: 350,
     height: 120, // Adjust the height as desired
@@ -37,6 +40,6 @@ const styles = {
     color: '#fff',
     fontFamily: 'Quicksand_400Regular'
   },
-};
+});
 
 export default Dream;
