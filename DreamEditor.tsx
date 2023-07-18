@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { RootStackParamList } from './types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 
+import Form from './components/Form'; 
 
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
@@ -18,13 +20,12 @@ export default function DreamEditor({navigation, route}: Props ) {
         <Text style={{color: '#fff'}}>{id}</Text>
         <TextInput></TextInput>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#040F16',
-
-    },
+  container: {
+    flex: 1,
+    backgroundColor: '#040F16',
+  },
 });
