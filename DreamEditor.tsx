@@ -6,6 +6,7 @@ import { RouteProp } from '@react-navigation/native';
 import { useState } from 'react';
 import * as SecureStore from 'expo-secure-store'
 import * as Crypto from 'expo-crypto';
+import { Dream } from './types'
 
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
@@ -52,7 +53,11 @@ export default function DreamEditor({ navigation, route }: Props) {
           if(id){
             key = id;
           }
-          const value = {title: title, description: description};
+            const value: Dream = {
+              id: key,
+              title: title,
+              description: description
+            };
             await SecureStore.setItemAsync(key, JSON.stringify(value));
             const dreamIDString = await SecureStore.getItemAsync('dreamIDs');
             const dreamIDs = JSON.parse(dreamIDString ?? '[]');

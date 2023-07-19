@@ -6,3 +6,8 @@ export type RootStackParamList = {
     DreamEditor: {id: string, title: string, description: string} | undefined
 }
 
+export type Dream = {
+    id: string,
+    title: string,
+    description: string,
+}

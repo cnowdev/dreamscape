@@ -7,7 +7,7 @@ interface Props {
   onPress?: () => void;
 }
 
-const Dream: React.FC<Props> = ({ title, description, onPress }) => {
+const DreamCard: React.FC<Props> = ({ title, description, onPress }) => {
   return (
     <Pressable onPress={onPress}>
     <View style={styles.descriptionBox}>
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Dream;
+export default DreamCard;

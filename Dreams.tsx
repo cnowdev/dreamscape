@@ -5,7 +5,7 @@ import { useFonts, Quicksand_400Regular, Quicksand_700Bold  } from '@expo-google
 import { Header } from '@rneui/themed'
 import { Ionicons } from '@expo/vector-icons'; 
 import { Feather } from '@expo/vector-icons'; 
-import Dream from './components/dream';
+import DreamCard from './components/DreamCard';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -13,6 +13,7 @@ import { RootStackParamList } from './types';
 import { useEffect } from 'react';
 import { getItemAsync } from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native'
+import { Dream } from './types';
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, "Dreams">;
 
@@ -23,7 +24,7 @@ export default function Dreams({ navigation, route }: ProfileProps) {
     Quicksand_700Bold
   })
 
-  const [dreams, setDreams] = useState<object[]>([]);
+  const [dreams, setDreams] = useState<Dream[]>([]);
   const isFocused = useIsFocused();
 
 
@@ -59,8 +60,8 @@ export default function Dreams({ navigation, route }: ProfileProps) {
   return (
     <View style={styles.container}>
 
-      {dreams?.map((dream: any) => <Dream key={dream.id} title={dream.title} description={dream.description} />)} 
-      <Dream title="My dream" description="I had a dream about something." onPress={() => navigation.navigate('DreamEditor', {
+      {dreams?.map((dream: any) => <DreamCard key={dream.id} title={dream.title} description={dream.description} />)} 
+      <DreamCard title="My dream" description="I had a dream about something." onPress={() => navigation.navigate('DreamEditor', {
         id: '1',
         title: 'My dream',
         description: 'I had a dream about something.'
