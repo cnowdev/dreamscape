@@ -51,6 +51,7 @@ export default function DreamEditor({ navigation, route }: Props) {
           AI Continuation: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         </Text>
       </View>
+      
     </View>
     <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Save</Text>
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginLeft: 20,
     fontFamily: 'Quicksand_700Bold',
-    width: 350
+    width: 370
   },
   descriptionInput: {
     fontSize: 18,
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     marginLeft: 20, 
     height: 150,
     fontFamily: 'Quicksand_400Regular',
-    width: 350,
+    width: 370,
     textAlignVertical: 'top'
   },
   AIdescription: {
@@ -104,9 +105,11 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 20,
     fontFamily: 'Quicksand_400Regular',
-    width: 350,
+    width: 370,
+    height: 150
   },
   button: {
+    marginTop: 40,
     backgroundColor: '#52aae0',
     borderRadius: 5,
     padding: 10,
@@ -114,6 +117,7 @@ const styles = StyleSheet.create({
     width: 350,
   },
   buttonText: {
+
     fontSize: 18,
     color: '#fff',
     textAlign: 'center',
