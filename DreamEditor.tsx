@@ -1,30 +1,28 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
 import { RootStackParamList } from './types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { useState } from 'react';
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
-import Form from './components/Form'; 
 
 const img = require('./assets/lmao.jpg')
 
 
 interface Props {
-    navigation: navigationProps['navigation'],
-    route: RouteProp<{ params: { id?: string, title?: string, description?: string } }, 'params'>
+  navigation: navigationProps['navigation'],
+  route: RouteProp<{ params: { id?: string, title?: string, description?: string } }, 'params'>
 }
 
-export default function DreamEditor({navigation, route}: Props ) {
+export default function DreamEditor({ navigation, route }: Props) {
   const id = route.params?.id || {}
   const [title, setTitle] = useState(route.params?.title ?? '');
   const [description, setDescription] = useState(route.params?.description ?? '');
 
-
   useEffect(() => {
     setTitle(route.params?.title ?? '')
     setDescription(route.params?.description ?? '')
-  }, [route.params])
+  }, [route.params]);
 
   return (
     <View style={styles.container}>
@@ -54,6 +52,9 @@ export default function DreamEditor({navigation, route}: Props ) {
         </Text>
       </View>
     </View>
+    <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Save</Text>
+        </TouchableOpacity>
     </View>
   );
 }
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     marginLeft: 20,
-    fontFamily: 'Quicksand_700Bold', 
+    fontFamily: 'Quicksand_700Bold',
     width: 350
   },
   descriptionInput: {
@@ -104,5 +105,18 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontFamily: 'Quicksand_400Regular',
     width: 350,
-  }
+  },
+  button: {
+    backgroundColor: '#52aae0',
+    borderRadius: 5,
+    padding: 10,
+    alignSelf: 'center',
+    width: 350,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+    fontFamily: 'Quicksand_700Bold',
+  },
 });
