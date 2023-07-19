@@ -1,51 +1,53 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { RootStackParamList } from './types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { useState } from 'react';
 
-import Form from './components/Form'; 
 
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
 interface Props {
-    navigation: navigationProps['navigation'],
-    route: RouteProp<{ params: { id?: string, title?: string, description?: string } }, 'params'>
+  navigation: navigationProps['navigation'],
+  route: RouteProp<{ params: { id?: string, title?: string, description?: string } }, 'params'>
 }
 
-export default function DreamEditor({navigation, route}: Props ) {
+export default function DreamEditor({ navigation, route }: Props) {
   const id = route.params?.id || {}
   const [title, setTitle] = useState(route.params?.title ?? '');
   const [description, setDescription] = useState(route.params?.description ?? '');
 
-
   useEffect(() => {
     setTitle(route.params?.title ?? '')
     setDescription(route.params?.description ?? '')
-  }, [route.params])
+  }, [route.params]);
 
   return (
     <View style={styles.container}>
-    <View>
-      <TextInput
-        style={styles.titleInput}
-        value={title}
-        onChangeText={(e: string) => {setTitle(e)}}
-        placeholder="Enter a title"
-        placeholderTextColor="#D3D3D3"
-      />
+      <View>
+        <TextInput
+          style={styles.titleInput}
+          value={title}
+          onChangeText={(e: string) => { setTitle(e) }}
+          placeholder="Enter a title"
+          placeholderTextColor="#D3D3D3"
+        />
 
-      <TextInput
-        style={styles.descriptionInput}
-        value={description}
-        onChangeText={(e: string) => {setDescription(e)}}
-        placeholder="Enter a description"
-        placeholderTextColor="#D3D3D3"
-        multiline={true} // Allow multiple lines for the description
-        numberOfLines={4} // Control the height by adjusting the number of lines displayed
-      />
-    </View>
+        <TextInput
+          style={styles.descriptionInput}
+          value={description}
+          onChangeText={(e: string) => { setDescription(e) }}
+          placeholder="Enter a description"
+          placeholderTextColor="#D3D3D3"
+          multiline={true} // Allow multiple lines for the description
+          numberOfLines={4} // Control the height by adjusting the number of lines displayed
+        />
+
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Save</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     marginLeft: 20,
-    fontFamily: 'Quicksand_700Bold', 
+    fontFamily: 'Quicksand_700Bold',
     width: 350
   },
   descriptionInput: {
@@ -73,10 +75,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 20,
-    marginLeft: 20, 
+    marginLeft: 20,
     height: 200,
     fontFamily: 'Quicksand_400Regular',
     width: 350,
     textAlignVertical: 'top'
+  },
+  button: {
+    backgroundColor: '#52aae0',
+    borderRadius: 5,
+    padding: 10,
+    alignSelf: 'center',
+    width: 350,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+    fontFamily: 'Quicksand_700Bold',
   },
 });

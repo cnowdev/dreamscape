@@ -21,12 +21,12 @@ const Dream: React.FC<Props> = ({ title, description, onPress }) => {
 const styles = StyleSheet.create({
   descriptionBox: {
     width: 350,
-    height: 120, // Adjust the height as desired
-    borderRadius: 10, // Adjust the border radius as desired for rounded corners
+    height: 120, 
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: '#000',
     padding: 10,
-    backgroundColor: '#092333', // Adjust the color as desired (darker blue)
+    backgroundColor: '#092333', 
     marginTop: 20,
   },
   title: {
