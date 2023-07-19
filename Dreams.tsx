@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react' 
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Keyboard } from 'react-native';
 import { useFonts, Quicksand_400Regular, Quicksand_700Bold  } from '@expo-google-fonts/quicksand';
 import { Header } from '@rneui/themed'
 import { Ionicons } from '@expo/vector-icons'; 
@@ -11,9 +11,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
 import { useEffect } from 'react';
-import { getItemAsync } from 'expo-secure-store';
+import { getItemAsync, deleteItemAsync } from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native'
 import { Dream } from './types';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, "Dreams">;
 
@@ -41,12 +42,25 @@ export default function Dreams({ navigation, route }: ProfileProps) {
     });
 
     Promise.all(promises).then((result) => {
-      const res = result.map((res) => JSON.parse(res ?? '{}'));
+      const res = result.flatMap((res) => JSON.parse(res ?? '[]'));
       setDreams(res);
       console.log(res);
-    })
+    });
 
 
+  }
+
+  const deleteAllDreams = async ( ) => {
+    const dreamIDString: string | null = await getItemAsync('dreamIDs');
+    const dreamIDs: string[] = JSON.parse(dreamIDString ?? '[]');
+
+    let promises: Promise<void>[] = [];
+      
+    dreamIDs?.forEach((id:string) => {
+      promises.push(deleteItemAsync(id));
+    });
+
+    Promise.all(promises);
   }
 
   useEffect( () => {
@@ -56,15 +70,19 @@ export default function Dreams({ navigation, route }: ProfileProps) {
 
   if(!fontsLoaded) { return null; }
 
+  const sampleDream: Dream = {
+    id: '1',
+    title: 'My dream',
+    description: 'I had a dream about something.'
+  }
 
   return (
     <View style={styles.container}>
-
-      {dreams?.map((dream: any) => <DreamCard key={dream.id} title={dream.title} description={dream.description} />)} 
-      <DreamCard title="My dream" description="I had a dream about something." onPress={() => navigation.navigate('DreamEditor', {
-        id: '1',
-        title: 'My dream',
-        description: 'I had a dream about something.'
+      {dreams?.map((dream: Dream) => <DreamCard key={dream.id} dream={dream} onPress={() => navigation.navigate('DreamEditor', {
+        dream: dream
+      })} />)} 
+      <DreamCard key={sampleDream.id} dream={sampleDream} onPress={() => navigation.navigate('DreamEditor', {
+        dream: sampleDream
       })} />
       <StatusBar style="light" translucent />
       <View style={styles.circleButtonContainer}>

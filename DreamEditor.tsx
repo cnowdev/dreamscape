@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from 'react-native';
 import { RootStackParamList } from './types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
@@ -7,26 +7,28 @@ import { useState } from 'react';
 import * as SecureStore from 'expo-secure-store'
 import * as Crypto from 'expo-crypto';
 import { Dream } from './types'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
 interface Props {
   navigation: navigationProps['navigation'],
-  route: RouteProp<{ params: { id?: string, title?: string, description?: string } }, 'params'>
+  route: RouteProp<{ params: { dream: Dream } }, 'params'>
 }
 
 export default function DreamEditor({ navigation, route }: Props) {
-  const id: string | null = route.params?.id || null;
-  const [title, setTitle] = useState(route.params?.title ?? '');
-  const [description, setDescription] = useState(route.params?.description ?? '');
+  const id: string | null = route.params?.dream.id || null;
+  const [title, setTitle] = useState(route.params?.dream.title ?? '');
+  const [description, setDescription] = useState(route.params?.dream.description ?? '');
 
   useEffect(() => {
-    setTitle(route.params?.title ?? '')
-    setDescription(route.params?.description ?? '')
+    setTitle(route.params?.dream.title ?? '')
+    setDescription(route.params?.dream.description ?? '')
   }, [route.params]);
 
   return (
     <View style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
         <TextInput
           style={styles.titleInput}
@@ -68,14 +70,23 @@ export default function DreamEditor({ navigation, route }: Props) {
               await SecureStore.setItemAsync('dreamIDs', JSON.stringify([...dreamIDs, key]));
             }
 
-            console.log(key)
-            console.log(value)
+            navigation.navigate('Dreams');
         }}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
+        { id &&
+        <TouchableOpacity style={styles.deleteButton} onPress={async () => {
+          
+            await SecureStore.deleteItemAsync(id);
+            navigation.navigate('Dreams');
+        }}>
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
+}
 
 
       </View>
+    </TouchableWithoutFeedback>
     </View>
   );
 }
@@ -123,6 +134,14 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 40,
     backgroundColor: '#52aae0',
+    borderRadius: 5,
+    padding: 10,
+    alignSelf: 'center',
+    width: 350,
+  },
+  deleteButton: {
+    marginTop: 40,
+    backgroundColor: '#FF6A74',
     borderRadius: 5,
     padding: 10,
     alignSelf: 'center',

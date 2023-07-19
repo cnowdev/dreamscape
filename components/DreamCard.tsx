@@ -1,18 +1,18 @@
 import React from 'react';
 import { Text, View, Pressable, StyleSheet } from 'react-native';
+import { Dream } from '../types';
 
 interface Props {
-  title: string;
-  description: string;
-  onPress?: () => void;
+  dream: Dream,
+  onPress: () => void;
 }
 
-const DreamCard: React.FC<Props> = ({ title, description, onPress }) => {
+const DreamCard: React.FC<Props> = ({ dream, onPress }) => {
   return (
     <Pressable onPress={onPress}>
     <View style={styles.descriptionBox}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <Text style={styles.title}>{dream.title}</Text>
+      <Text style={styles.description}>{dream.description}</Text>
     </View>
     </Pressable>
   );
