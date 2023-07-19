@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react' 
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { useFonts, Quicksand_400Regular, Quicksand_700Bold  } from '@expo-google-fonts/quicksand';
 import { Header } from '@rneui/themed'
@@ -9,6 +10,9 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
+import { useEffect } from 'react';
+import { getItemAsync } from 'expo-secure-store';
+import { useIsFocused } from '@react-navigation/native'
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, "Dreams">;
 
@@ -19,17 +23,48 @@ export default function Dreams({ navigation, route }: ProfileProps) {
     Quicksand_700Bold
   })
 
+  const [dreams, setDreams] = useState<object[]>([]);
+  const isFocused = useIsFocused();
+
+
+  const getDreams = async() => {
+
+
+    const dreamIDString: string | null = await getItemAsync('dreamIDs');
+    const dreamIDs: string[] = JSON.parse(dreamIDString ?? '[]');
+
+    let promises: Promise<string | null>[] = [];
+      
+    dreamIDs?.forEach((id:string) => {
+      promises.push(getItemAsync(id));
+    });
+
+    Promise.all(promises).then((result) => {
+      const res = result.map((res) => JSON.parse(res ?? '{}'));
+      setDreams(res);
+      console.log(res);
+    })
+
+
+  }
+
+  useEffect( () => {
+
+    getDreams();
+  }, [isFocused]);
+
   if(!fontsLoaded) { return null; }
+
 
   return (
     <View style={styles.container}>
+
+      {dreams?.map((dream: any) => <Dream key={dream.id} title={dream.title} description={dream.description} />)} 
       <Dream title="My dream" description="I had a dream about something." onPress={() => navigation.navigate('DreamEditor', {
         id: '1',
         title: 'My dream',
         description: 'I had a dream about something.'
       })} />
-      <Dream title="Description Title" description="This is a sample description." />
-      <Dream title="Description Title" description="This is a sample description." />
       <StatusBar style="light" translucent />
       <View style={styles.circleButtonContainer}>
       <Pressable style={styles.circleButton} onPress={() => navigation.navigate('DreamEditor')}>
@@ -38,6 +73,7 @@ export default function Dreams({ navigation, route }: ProfileProps) {
     </View>
     </View>
   );
+
 }
 
 const styles = StyleSheet.create({
@@ -65,4 +101,4 @@ const styles = StyleSheet.create({
     borderRadius: 42,
     backgroundColor: '#005E7C',
   },
-});
+})

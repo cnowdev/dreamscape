@@ -1,3 +1,4 @@
+import 'react-native-get-random-values'
 import SideDrawer from "./components/SideDrawer";
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';

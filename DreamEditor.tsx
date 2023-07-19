@@ -5,11 +5,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { useState } from 'react';
 import * as SecureStore from 'expo-secure-store'
-import 'react-native-get-random-values'
-{/*
-          @ts-ignore */}
-import { v4 as uuidv4 } from 'uuid';
-
+import * as Crypto from 'expo-crypto';
 
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
@@ -19,7 +15,7 @@ interface Props {
 }
 
 export default function DreamEditor({ navigation, route }: Props) {
-  const id = route.params?.id || {}
+  const id: string | null = route.params?.id || null;
   const [title, setTitle] = useState(route.params?.title ?? '');
   const [description, setDescription] = useState(route.params?.description ?? '');
 
@@ -48,24 +44,28 @@ export default function DreamEditor({ navigation, route }: Props) {
           multiline={true}
           numberOfLines={4} 
         />
-<<<<<<< HEAD
         <Text style={styles.AIdescription}>
           AI Continuation: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
         </Text>
-      </View>
-      
-    </View>
-    <TouchableOpacity style={styles.button}>
-=======
-        
         <TouchableOpacity style={styles.button} onPress={async () => {
-          const key = uuidv4();
+          let key = Crypto.randomUUID();
+          if(id){
+            key = id;
+          }
           const value = {title: title, description: description};
             await SecureStore.setItemAsync(key, JSON.stringify(value));
+            const dreamIDString = await SecureStore.getItemAsync('dreamIDs');
+            const dreamIDs = JSON.parse(dreamIDString ?? '[]');
+
+            if(!dreamIDs?.includes(key)){
+              {
+                /* @ts-ignore */}
+              await SecureStore.setItemAsync('dreamIDs', JSON.stringify([...dreamIDs, key]));
+            }
+
             console.log(key)
             console.log(value)
         }}>
->>>>>>> 07412d86755d76d35607b0b1009be7ce618a95ea
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
 
@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
     width: 370,
     textAlignVertical: 'top'
   },
-<<<<<<< HEAD
   AIdescription: {
     fontSize: 16,
     color: '#fff',
@@ -116,8 +115,6 @@ const styles = StyleSheet.create({
     width: 370,
     height: 150
   },
-=======
->>>>>>> 07412d86755d76d35607b0b1009be7ce618a95ea
   button: {
     marginTop: 40,
     backgroundColor: '#52aae0',
