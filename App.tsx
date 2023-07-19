@@ -36,6 +36,8 @@ export default function App() {
           headerTitle: '',
           headerBackTitleVisible: false
         }}/>
+          {/*
+          @ts-ignore */}
       </Stack.Navigator>
     </NavigationContainer>
   );
