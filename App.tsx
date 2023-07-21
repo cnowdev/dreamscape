@@ -10,6 +10,12 @@ import { Feather } from '@expo/vector-icons';
 import Dream from './components/DreamCard'
 import { createStackNavigator } from '@react-navigation/stack';
 import DreamEditor from "./DreamEditor";
+import DreamViewer from "./DreamViewer";
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { Menu, PaperProvider } from 'react-native-paper';
+import {useState} from 'react'
+import { deleteItemAsync } from 'expo-secure-store';
+
 
 const Stack = createStackNavigator();
 
@@ -22,7 +28,10 @@ export default function App() {
 
   if(!fontsLoaded) { return null; }
 
+  
+
   return (
+    <PaperProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Something" component={Something} options={{headerShown: false}}/>
@@ -33,14 +42,66 @@ export default function App() {
             backgroundColor: '#040F16', 
             shadowColor: 'transparent',
           },
+          headerRight: (props) => {
+            return ( 
+             <Ionicons name="md-reorder-three-outline" size={24} color="white" style={{ paddingRight: 20}} onPress={() => {
+                alert('hello world!')
+              }} />
+            )
+          },
           headerTintColor: '#fff',
           headerTitle: '',
           headerBackTitleVisible: false
         }}/>
           {/*
           @ts-ignore */}
+        <Stack.Screen name="DreamViewer" component={DreamViewer} options={({route, navigation}: RouteProp<{ params: { dream: Dream } }, 'params'>) => ({
+          headerStyle: {
+            backgroundColor: '#040F16', 
+            shadowColor: 'transparent',
+          },
+          headerRight: (props) => {
+            const [visible, setVisible] = useState(false);
+
+            const openMenu = () => setVisible(true);
+          
+            const closeMenu = () => setVisible(false)
+            return ( 
+              <View style={{zIndex: 100, elevation: 100}}>
+
+              <Menu
+                style={{width: 200}}
+                visible={visible}
+                theme={{colors: {primary: '#040F16', text: 'white'}}}
+                
+                onDismiss={closeMenu}
+                anchor={<Feather name="more-vertical" size={24} color="white" style={{ paddingRight: 20, marginTop: -5}} onPress={() => {openMenu()}} />}>
+                <Menu.Item onPress={() => {
+                  closeMenu();
+                  navigation.navigate('DreamEditor', {
+                    dream: route.params.dream
+                  })
+                }} title="Edit"/>
+                <Menu.Item onPress={() => {
+                  closeMenu();
+                  deleteItemAsync(route.params.dream.id);
+                  navigation.navigate('Dreams');
+                }} title="Delete"/>
+              </Menu>
+
+              </View>
+            )
+          },
+          headerTintColor: '#fff',
+          headerTitle: '',
+          headerBackTitleVisible: false
+        })}/>
+          {/*
+          @ts-ignore */}
       </Stack.Navigator>
+      
     </NavigationContainer>
+    </PaperProvider>
   );
 }
 

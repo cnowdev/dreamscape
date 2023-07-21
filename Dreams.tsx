@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import { getItemAsync, deleteItemAsync } from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native'
 import { Dream } from './types';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, "Dreams">;
 
@@ -78,12 +78,14 @@ export default function Dreams({ navigation, route }: ProfileProps) {
 
   return (
     <View style={styles.container}>
-      {dreams?.map((dream: Dream) => <DreamCard key={dream.id} dream={dream} onPress={() => navigation.navigate('DreamEditor', {
+      <ScrollView>
+      {dreams?.map((dream: Dream) => <DreamCard key={dream.id} dream={dream} onPress={() => navigation.navigate('DreamViewer', {
         dream: dream
       })} />)} 
-      <DreamCard key={sampleDream.id} dream={sampleDream} onPress={() => navigation.navigate('DreamEditor', {
+      <DreamCard key={sampleDream.id} dream={sampleDream} onPress={() => navigation.navigate('DreamViewer', {
         dream: sampleDream
       })} />
+      </ScrollView>
       <StatusBar style="light" translucent />
       <View style={styles.circleButtonContainer}>
       <Pressable style={styles.circleButton} onPress={() => navigation.navigate('DreamEditor')}>

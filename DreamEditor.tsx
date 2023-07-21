@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Keyboard } from 'react-native';
 import { RootStackParamList } from './types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
@@ -7,7 +7,7 @@ import { useState } from 'react';
 import * as SecureStore from 'expo-secure-store'
 import * as Crypto from 'expo-crypto';
 import { Dream } from './types'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
@@ -47,9 +47,6 @@ export default function DreamEditor({ navigation, route }: Props) {
           multiline={true}
           numberOfLines={4} 
         />
-        <Text style={styles.AIdescription}>
-          AI Continuation: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-        </Text>
         <TouchableOpacity style={styles.button} onPress={async () => {
           let key = Crypto.randomUUID();
           if(id){
@@ -105,7 +102,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginLeft: 20,
     fontFamily: 'Quicksand_700Bold',
-    width: 370
+    width: '90%'
   },
   descriptionInput: {
     fontSize: 18,
@@ -117,7 +114,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     height: 200,
     fontFamily: 'Quicksand_400Regular',
-    width: 370,
+    width: '90%',
     textAlignVertical: 'top'
   },
   AIdescription: {
