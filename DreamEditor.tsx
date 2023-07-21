@@ -71,15 +71,6 @@ export default function DreamEditor({ navigation, route }: Props) {
         }}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
-        { id &&
-        <TouchableOpacity style={styles.deleteButton} onPress={async () => {
-          
-            await SecureStore.deleteItemAsync(id);
-            navigation.navigate('Dreams');
-        }}>
-          <Text style={styles.buttonText}>Delete</Text>
-        </TouchableOpacity>
-}
 
 
       </View>

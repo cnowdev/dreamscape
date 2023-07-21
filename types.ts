@@ -11,4 +11,5 @@ export type Dream = {
     id: string,
     title: string,
     description: string,
+    AIDescription?: string,
 }

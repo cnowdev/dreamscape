@@ -8,23 +8,46 @@ import * as SecureStore from 'expo-secure-store'
 import * as Crypto from 'expo-crypto';
 import { Dream } from './types'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Configuration, OpenAIApi } from 'openai';
 const img = require('./assets/placeholder.png');
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
+{/*
+  @ts-ignore */}
+import {OPENAI_API_KEY} from '@env'
+import 'react-native-url-polyfill/auto'
 
 interface Props {
   navigation: navigationProps['navigation'],
   route: RouteProp<{ params: { dream: Dream } }, 'params'>
 }
 
-export default function DreamViewer({ navigation, route }: Props) {
-  const id: string | null = route.params?.dream.id || null;
-  const [title, setTitle] = useState(route.params?.dream.title ?? '');
-  const [description, setDescription] = useState(route.params?.dream.description ?? '');
+const config = new Configuration({
+  apiKey: OPENAI_API_KEY,
+});
 
-  useEffect(() => {
-    setTitle(route.params?.dream.title ?? '')
-    setDescription(route.params?.dream.description ?? '')
+
+
+export default function DreamViewer({ navigation, route }: Props) {
+ const {id, title, description} = route.params.dream;
+ const [AIDescription, setAIDescription] = useState<String>('');
+
+ useEffect(() => {
+
+  setAIDescription(route.params?.dream.AIDescription ?? '');
+
   }, [route.params]);
+
+  const generateDreamCont = async() => {
+    const openai = new OpenAIApi(config);
+    const completion = await openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: `Generate a continuation or conclusion to this dream: \n\n Title of the dream: ${title} \n\n Description of the dream: ${description} \n\n Continuation:`,
+      max_tokens: 4000,
+    });
+    await SecureStore.setItemAsync(id, JSON.stringify({...route.params.dream, AIDescription: completion.data.choices[0].text}));
+    console.log(completion.data.choices[0].text);
+    setAIDescription(completion.data.choices[0].text ?? '');
+  }
 
   return (
     <View style={styles.container}>
@@ -32,8 +55,24 @@ export default function DreamViewer({ navigation, route }: Props) {
       <View>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
-        <Text style={styles.AIdescription}>AI Description: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Text>
+        {AIDescription && 
+          <Text style={styles.AIdescription}>{AIDescription}</Text>
+        }
+
       </View>
+      {!AIDescription && 
+        <TouchableOpacity style={styles.button} onPress={async () => {
+          console.log(OPENAI_API_KEY);
+          await generateDreamCont().catch((e) => {
+          console.log(e); 
+          });
+        }}>
+          <Text style={styles.buttonText}>Generate AI Text</Text>
+        </TouchableOpacity>
+      
+      }
+
+
     </View>
   );
 }
@@ -72,10 +111,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontFamily: 'Quicksand_400Regular',
     width: 370,
-    height: 150
   },
   button: {
-    marginTop: 40,
     backgroundColor: '#52aae0',
     borderRadius: 5,
     padding: 10,

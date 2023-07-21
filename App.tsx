@@ -42,13 +42,6 @@ export default function App() {
             backgroundColor: '#040F16', 
             shadowColor: 'transparent',
           },
-          headerRight: (props) => {
-            return ( 
-             <Ionicons name="md-reorder-three-outline" size={24} color="white" style={{ paddingRight: 20}} onPress={() => {
-                alert('hello world!')
-              }} />
-            )
-          },
           headerTintColor: '#fff',
           headerTitle: '',
           headerBackTitleVisible: false

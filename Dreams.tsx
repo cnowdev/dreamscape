@@ -15,6 +15,9 @@ import { getItemAsync, deleteItemAsync } from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native'
 import { Dream } from './types';
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+{/* 
+  @ts-ignore */}
+import { OPENAI_API_KEY } from '@env';
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, "Dreams">;
 
@@ -72,7 +75,7 @@ export default function Dreams({ navigation, route }: ProfileProps) {
 
   const sampleDream: Dream = {
     id: '1',
-    title: 'My dream',
+    title: 'Cool dream',
     description: 'I had a dream about something.'
   }
 
