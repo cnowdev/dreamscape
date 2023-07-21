@@ -47,7 +47,6 @@ export default function Dreams({ navigation, route }: ProfileProps) {
     Promise.all(promises).then((result) => {
       const res = result.flatMap((res) => JSON.parse(res ?? '[]'));
       setDreams(res);
-      console.log(res);
     });
 
 
@@ -78,7 +77,7 @@ export default function Dreams({ navigation, route }: ProfileProps) {
     title: 'Cool dream',
     description: 'I had a dream about something.'
   }
-
+  
   return (
     <View style={styles.container}>
       <ScrollView>
