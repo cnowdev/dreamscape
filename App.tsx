@@ -15,6 +15,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Menu, PaperProvider } from 'react-native-paper';
 import {useState} from 'react'
 import { deleteItemAsync } from 'expo-secure-store';
+import NewDreamPrompt from './NewDreamPrompt';
 
 
 const Stack = createStackNavigator();
@@ -38,6 +39,17 @@ export default function App() {
           {/*
           @ts-ignore */}
         <Stack.Screen name="DreamEditor" component={DreamEditor} options={{
+          headerStyle: {
+            backgroundColor: '#040F16', 
+            shadowColor: 'transparent',
+          },
+          headerTintColor: '#fff',
+          headerTitle: '',
+          headerBackTitleVisible: false
+        }}/>
+                  {/*
+          @ts-ignore */}
+        <Stack.Screen name="NewDreamPrompt" component={NewDreamPrompt} options={{
           headerStyle: {
             backgroundColor: '#040F16', 
             shadowColor: 'transparent',

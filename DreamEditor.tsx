@@ -8,6 +8,12 @@ import * as SecureStore from 'expo-secure-store'
 import * as Crypto from 'expo-crypto';
 import { Dream } from './types'
 import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native-gesture-handler';
+import DateTimePicker from '@react-native-community/datetimepicker';
+{/*
+  @ts-ignore */}
+import {OPENAI_API_KEY} from '@env'
+import { Configuration, OpenAIApi } from 'openai';
+import { set } from 'react-native-reanimated';
 
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
@@ -16,15 +22,70 @@ interface Props {
   route: RouteProp<{ params: { dream: Dream } }, 'params'>
 }
 
+const config = new Configuration({
+  apiKey: OPENAI_API_KEY,
+});
+
+
 export default function DreamEditor({ navigation, route }: Props) {
   const id: string | null = route.params?.dream.id || null;
+  const useAIDescription: boolean = route.params?.dream.useAIDescription;
   const [title, setTitle] = useState(route.params?.dream.title ?? '');
   const [description, setDescription] = useState(route.params?.dream.description ?? '');
+  const [date, setDate] = useState(new Date());
+  const [AIDescription, setAIDescription] = useState<String>('');
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTitle(route.params?.dream.title ?? '')
     setDescription(route.params?.dream.description ?? '')
+    setAIDescription(route.params?.dream.AIDescription ?? '');
+    setDate(new Date(route.params?.dream.date) ?? new Date());
   }, [route.params]);
+
+
+  const generateDreamCont = async() => {
+    const openai = new OpenAIApi(config);
+    const completion = await openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: `Rewrite this dream to be more descriptive: \n\n Title of the dream: ${title} \n\n Description of the dream: ${description} \n\n Respond with only the rewritten description and no other text. Then, add '||' to the end of your response, and provide a one sentence description of the dream that will be fed into an AI Image generation model.`,
+      max_tokens: 4000,
+    });
+    //await SecureStore.setItemAsync(dream.id, JSON.stringify({...route.params.dream, AIDescription: completion.data.choices[0].text}));
+    console.log(completion.data.choices[0].text);
+    return completion.data.choices[0].text?.trim();
+  }
+
+  const generateImage = async(prompt: string) => {
+    const openai = new OpenAIApi(config);
+    const res = await openai.createImage({
+      prompt: prompt + ', digital art',
+      n: 1,
+      size: '512x512'
+    });
+
+    return res.data.data[0].url;
+  }
+
+  const saveDream = async(dream: Dream) => {
+    await SecureStore.setItemAsync(dream.id, JSON.stringify(dream));
+
+    const dreamIDString = await SecureStore.getItemAsync('dreamIDs');
+    const dreamIDs = JSON.parse(dreamIDString ?? '[]');
+
+    if(!dreamIDs?.includes(dream.id)){
+      await SecureStore.setItemAsync('dreamIDs', JSON.stringify([...dreamIDs, dream.id]));
+    }
+  }
+
+  if(loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={{fontSize: 30, fontFamily: 'Quicksand_700Bold', color: '#fff'}}>Generating your dream...</Text>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -34,7 +95,7 @@ export default function DreamEditor({ navigation, route }: Props) {
           style={styles.titleInput}
           value={title}
           onChangeText={(e: string) => { setTitle(e) }}
-          placeholder="Enter a title"
+          placeholder="Untitled"
           placeholderTextColor="#D3D3D3"
         />
 
@@ -42,32 +103,67 @@ export default function DreamEditor({ navigation, route }: Props) {
           style={styles.descriptionInput}
           value={description}
           onChangeText={(e: string) => { setDescription(e) }}
-          placeholder="Enter a description"
+          placeholder="Describe your dream"
           placeholderTextColor="#D3D3D3"
           multiline={true}
           numberOfLines={4} 
         />
+
+
         <TouchableOpacity style={styles.button} onPress={async () => {
-          let key = Crypto.randomUUID();
-          if(id){
-            key = id;
-          }
-            const value: Dream = {
-              id: key,
+
+
+          if(!id){
+
+            let value: Dream = {
+              id: Crypto.randomUUID(),
               title: title,
-              description: description
+              description: description,
+              useAIDescription: false,
+              date: new Date().toISOString(),
             };
-            await SecureStore.setItemAsync(key, JSON.stringify(value));
+
+
+            try{
+              setLoading(true);
+              const AIresponse = await generateDreamCont();
+              const [rewrittenDream, prompt] = AIresponse!.split('||');
+              value.AIDescription = rewrittenDream;
+              
+              const imageURL = await generateImage(prompt);
+              value.image = imageURL;
+
+              setLoading(false);
+              navigation.navigate('NewDreamPrompt', {
+                dream: value,
+              });
+            } catch(e) {
+              console.log(e);
+              await saveDream(value);
+              navigation.navigate('Dreams');
+            }
+
+
+          } else {
+
+
+            const value: Dream = {
+              id: id,
+              title: title,
+              description: description,
+              useAIDescription: useAIDescription,
+              date: date.toISOString(),
+            };
+            await SecureStore.setItemAsync(id, JSON.stringify(value));
             const dreamIDString = await SecureStore.getItemAsync('dreamIDs');
             const dreamIDs = JSON.parse(dreamIDString ?? '[]');
 
-            if(!dreamIDs?.includes(key)){
-              {
-                /* @ts-ignore */}
-              await SecureStore.setItemAsync('dreamIDs', JSON.stringify([...dreamIDs, key]));
+            if(!dreamIDs?.includes(id)){
+              await SecureStore.setItemAsync('dreamIDs', JSON.stringify([...dreamIDs, id]));
             }
 
             navigation.navigate('Dreams');
+          }
         }}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
@@ -83,6 +179,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#040F16',
+  },
+  loadingContainer: {
+    backgroundColor: '#040F16',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   titleInput: {
     fontSize: 30,

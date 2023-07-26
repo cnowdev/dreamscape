@@ -12,7 +12,7 @@ const DreamCard: React.FC<Props> = ({ dream, onPress }) => {
     <Pressable onPress={onPress}>
     <View style={styles.descriptionBox}>
       <Text style={styles.title}>{dream.title}</Text>
-      <Text style={styles.description}>{dream.description}</Text>
+      <Text style={styles.description} textBreakStrategy='simple'>{dream.description}</Text>
     </View>
     </Pressable>
   );
@@ -38,7 +38,8 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     color: '#fff',
-    fontFamily: 'Quicksand_400Regular'
+    fontFamily: 'Quicksand_400Regular',
+    flexShrink: 1,
   },
 });
 

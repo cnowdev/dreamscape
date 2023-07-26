@@ -29,27 +29,18 @@ const config = new Configuration({
 
 
 export default function DreamViewer({ navigation, route }: Props) {
- const {id, title, description} = route.params.dream;
+
+ const {id, title, description, useAIDescription, image} = route.params.dream;
  const [AIDescription, setAIDescription] = useState<String>('');
  const [loading, setLoading] = useState<Boolean>(false);
 
  useEffect(() => {
 
   setAIDescription(route.params?.dream.AIDescription ?? '');
-
+  console.log(useAIDescription);
   }, [route.params]);
 
-  const generateDreamCont = async() => {
-    const openai = new OpenAIApi(config);
-    const completion = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `Generate a continuation or conclusion to this dream: \n\n Title of the dream: ${title} \n\n Description of the dream: ${description} \n\n Continuation:`,
-      max_tokens: 4000,
-    });
-    await SecureStore.setItemAsync(id, JSON.stringify({...route.params.dream, AIDescription: completion.data.choices[0].text}));
-    console.log(completion.data.choices[0].text);
-    setAIDescription(completion.data.choices[0].text ?? '');
-  }
+
 
   if(loading) {
     return (
@@ -62,35 +53,21 @@ export default function DreamViewer({ navigation, route }: Props) {
   return (
     <View style={styles.container}>
       <ScrollView>
-      <Image source={img} style={styles.image}/>
+        { image && 
+      <Image source={{uri: image}} style={styles.image}/>
+        }
+
       <View>
 
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
+        <Text style={styles.description}>{
+          useAIDescription? AIDescription : description
+        }</Text>
 
         
-        {AIDescription && 
-        <View>
-          <Divider/>
-          <Text style={styles.title}>AI Continuation: </Text>
-          <Text style={styles.AIdescription}>{AIDescription}</Text>
-        </View>
-        }
 
       </View>
       
-      {!AIDescription && 
-        <TouchableOpacity style={styles.button} onPress={async () => {
-          setLoading(true);
-          await generateDreamCont().catch((e) => {
-          console.log(e); 
-          });
-          setLoading(false);
-        }}>
-          <Text style={styles.buttonText}>Generate AI Text</Text>
-        </TouchableOpacity>
-      
-      }
 
       </ScrollView>
     </View>

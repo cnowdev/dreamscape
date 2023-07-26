@@ -5,11 +5,15 @@ export type RootStackParamList = {
     About: undefined,
     DreamEditor: {dream: Dream} | undefined,
     DreamViewer: {dream: Dream} | undefined,
+    NewDreamPrompt: {dream: Dream},
 }
 
 export type Dream = {
     id: string,
     title: string,
     description: string,
+    date: string,
     AIDescription?: string,
+    image?: string,
+    useAIDescription: boolean,
 }

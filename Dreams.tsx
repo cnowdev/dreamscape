@@ -31,6 +31,40 @@ export default function Dreams({ navigation, route }: ProfileProps) {
   const [dreams, setDreams] = useState<Dream[]>([]);
   const isFocused = useIsFocused();
 
+  const renderDreamsWithDividers = () => {
+
+    const sortedDreams = dreams.slice().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    let dreamList: JSX.Element[] = [];
+    let currentDate: string | null = null;
+
+     sortedDreams.forEach((dream: Dream, index: number) => {
+      const dreamDate = new Date(dream.date).toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'numeric',
+        day: 'numeric',
+      });
+
+      if (dreamDate !== currentDate) {
+        currentDate = dreamDate;
+
+        // Add a text-based divider for each new date
+        dreamList.push(
+          <Text key={`divider-${index}`} style={styles.dividerText}>
+            {dreamDate}
+          </Text>
+        );
+      }
+
+      dreamList.push(
+        <View key={`dream-${index}`}>
+          <DreamCard dream={dream} onPress={() => navigation.navigate('DreamViewer', { dream: dream })} />
+        </View>
+      );
+    });
+
+    return dreamList;
+  };
 
   const getDreams = async() => {
 
@@ -68,6 +102,7 @@ export default function Dreams({ navigation, route }: ProfileProps) {
   useEffect( () => {
 
     getDreams();
+    console.log(dreams);
   }, [isFocused]);
 
   if(!fontsLoaded) { return null; }
@@ -75,15 +110,15 @@ export default function Dreams({ navigation, route }: ProfileProps) {
   const sampleDream: Dream = {
     id: '1',
     title: 'Cool dream',
-    description: 'I had a dream about something.'
+    description: 'I had a dream about something.',
+    useAIDescription: false,
+    date: new Date().toISOString(),
   }
   
   return (
     <View style={styles.container}>
       <ScrollView>
-      {dreams?.map((dream: Dream) => <DreamCard key={dream.id} dream={dream} onPress={() => navigation.navigate('DreamViewer', {
-        dream: dream
-      })} />)} 
+      {renderDreamsWithDividers()}
       <DreamCard key={sampleDream.id} dream={sampleDream} onPress={() => navigation.navigate('DreamViewer', {
         dream: sampleDream
       })} />
@@ -123,5 +158,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 42,
     backgroundColor: '#005E7C',
+  },
+  dividerText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'gray',
+    marginHorizontal: 0,
+    marginTop: 10,
+    marginBottom: 5,
   },
 })
