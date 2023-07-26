@@ -1,2 +1,2 @@
 # dreamscape
-An app that allows users to journal their dreams and generate continuations or conclusions to their dreams
+An app created with React Native and Expo that allows users to journal their dreams and use AI to generate images of and rewrite their dreams.
