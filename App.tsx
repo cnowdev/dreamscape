@@ -16,7 +16,9 @@ import { Menu, PaperProvider } from 'react-native-paper';
 import {useState} from 'react'
 import { deleteItemAsync } from 'expo-secure-store';
 import NewDreamPrompt from './NewDreamPrompt';
-
+import ImageEditor from './ImageEditor';
+import { ToastProvider } from 'react-native-toast-notifications'
+import Toast from 'react-native-toast-notifications/lib/typescript/toast';
 
 const Stack = createStackNavigator();
 
@@ -33,12 +35,24 @@ export default function App() {
 
   return (
     <PaperProvider>
+    <ToastProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Something" component={Something} options={{headerShown: false}}/>
           {/*
           @ts-ignore */}
         <Stack.Screen name="DreamEditor" component={DreamEditor} options={{
+          headerStyle: {
+            backgroundColor: '#040F16', 
+            shadowColor: 'transparent',
+          },
+          headerTintColor: '#fff',
+          headerTitle: '',
+          headerBackTitleVisible: false
+        }}/>
+                  {/*
+          @ts-ignore */}
+        <Stack.Screen name="ImageEditor" component={ImageEditor} options={{
           headerStyle: {
             backgroundColor: '#040F16', 
             shadowColor: 'transparent',
@@ -106,6 +120,7 @@ export default function App() {
       </Stack.Navigator>
       
     </NavigationContainer>
+    </ToastProvider>
     </PaperProvider>
   );
 }

@@ -31,7 +31,7 @@ export default function DreamEditor({ navigation, route }: Props) {
   const id: string | null = route.params?.dream.id || null;
   const useAIDescription: boolean = route.params?.dream.useAIDescription;
   const [title, setTitle] = useState(route.params?.dream.title ?? '');
-  const [description, setDescription] = useState(route.params?.dream.description ?? '');
+  const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date());
   const [AIDescription, setAIDescription] = useState<String>('');
 
@@ -39,7 +39,7 @@ export default function DreamEditor({ navigation, route }: Props) {
 
   useEffect(() => {
     setTitle(route.params?.dream.title ?? '')
-    setDescription(route.params?.dream.description ?? '')
+    route.params?.dream.useAIDescription? setDescription(route.params?.dream.AIDescription ?? '') : setDescription(route.params?.dream.description ?? '');
     setAIDescription(route.params?.dream.AIDescription ?? '');
     setDate(new Date(route.params?.dream.date) ?? new Date());
   }, [route.params]);
@@ -47,14 +47,14 @@ export default function DreamEditor({ navigation, route }: Props) {
 
   const generateDreamCont = async() => {
     const openai = new OpenAIApi(config);
-    const completion = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `Rewrite this dream to be more descriptive: \n\n Title of the dream: ${title} \n\n Description of the dream: ${description} \n\n Respond with only the rewritten description and no other text. Then, add '||' to the end of your response, and provide a one sentence description of the dream that will be fed into an AI Image generation model.`,
+    const completion = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo-16k',
+      messages: [{role: 'user', content: `Rewrite this dream to be more descriptive: \n\n Title of the dream: ${title} \n\n Description of the dream: ${description} \n\n Respond with only the rewritten description and no other text. Then, add '||' to the end of your response, and provide a one sentence description of the dream that will be fed into an AI Image generation model.`}],
       max_tokens: 4000,
     });
     //await SecureStore.setItemAsync(dream.id, JSON.stringify({...route.params.dream, AIDescription: completion.data.choices[0].text}));
-    console.log(completion.data.choices[0].text);
-    return completion.data.choices[0].text?.trim();
+    
+    return completion.data.choices[0].message?.content?.trim();
   }
 
   const generateImage = async(prompt: string) => {

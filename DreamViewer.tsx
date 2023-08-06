@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Image, Pressable } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RootStackParamList } from './types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
@@ -54,12 +55,26 @@ export default function DreamViewer({ navigation, route }: Props) {
     <View style={styles.container}>
       <ScrollView>
         { image && 
-      <Image source={{uri: image}} style={styles.image}/>
+      <>
+        <Image source={{uri: image}} style={styles.image}/>
+        <Pressable style={styles.editButton} onPress={() => navigation.navigate('ImageEditor', {
+          dream: route.params.dream
+        })}>
+          <MaterialCommunityIcons name="pencil" size={32} color="white" />
+        </Pressable>   
+      </>
         }
 
       <View>
 
         <Text style={styles.title}>{title}</Text>
+        {
+          useAIDescription &&
+          <View style={styles.aiIndicator}>
+            <Text style={styles.aiText}>AI Enhanced</Text>
+          </View>
+        }
+
         <Text style={styles.description}>{
           useAIDescription? AIDescription : description
         }</Text>
@@ -147,5 +162,29 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginBottom: 10,
     marginTop: 10
+  },
+  editButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: '#005E7C', // Set the background to transparent to make it circular
+    borderRadius: 25, // Use half of the desired icon size for a circular button
+    padding: 10,
+    // You can add more styles for the icon button if needed
+  },
+  aiIndicator: {
+    alignSelf: 'flex-start',
+    backgroundColor: 'transparent',
+    borderColor: '#28a745',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 5,
+    marginLeft: 30,
+    marginBottom: 10,
+  },
+  aiText: {
+    color: '#28a745',
+    fontSize: 12,
+    fontFamily: 'Quicksand_400Regular',
   },
 });

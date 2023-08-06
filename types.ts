@@ -5,6 +5,7 @@ export type RootStackParamList = {
     About: undefined,
     DreamEditor: {dream: Dream} | undefined,
     DreamViewer: {dream: Dream} | undefined,
+    ImageEditor: {dream: Dream},
     NewDreamPrompt: {dream: Dream},
 }
 

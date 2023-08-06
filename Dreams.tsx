@@ -102,7 +102,7 @@ export default function Dreams({ navigation, route }: ProfileProps) {
   useEffect( () => {
 
     getDreams();
-    console.log(dreams);
+    
   }, [isFocused]);
 
   if(!fontsLoaded) { return null; }
