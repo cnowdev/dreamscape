@@ -12,7 +12,7 @@ const DreamCard: React.FC<Props> = ({ dream, onPress }) => {
     <Pressable onPress={onPress}>
     <View style={styles.descriptionBox}>
       <Text style={styles.title}>{dream.title}</Text>
-      <Text style={styles.description} textBreakStrategy='simple'>{dream.description}</Text>
+      <Text style={styles.description} textBreakStrategy='simple'>{dream.useAIDescription? dream.AIDescription : dream.description}</Text>
     </View>
     </Pressable>
   );

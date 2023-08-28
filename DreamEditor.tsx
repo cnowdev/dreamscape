@@ -9,6 +9,8 @@ import * as Crypto from 'expo-crypto';
 import { Dream } from './types'
 import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as FileSystem from 'expo-file-system';
+
 {/*
   @ts-ignore */}
 import {OPENAI_API_KEY} from '@env'
@@ -49,7 +51,7 @@ export default function DreamEditor({ navigation, route }: Props) {
     const openai = new OpenAIApi(config);
     const completion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo-16k',
-      messages: [{role: 'user', content: `Rewrite this dream to be more descriptive: \n\n Title of the dream: ${title} \n\n Description of the dream: ${description} \n\n Respond with only the rewritten description and no other text. Then, add '||' to the end of your response, and provide a one sentence description of the dream that will be fed into an AI Image generation model.`}],
+      messages: [{role: 'user', content: `Your job is to rewrite a dream you are given to add more detail. Please do not rewrite the title. \n \n Rewrite this dream to be more descriptive: \n\n Title of the dream: ${title} \n\n Description of the dream: ${description} \n\n Respond with only the rewritten description and no other text. Then, add '||' to the end of your response, and provide a one sentence description of the dream that will be fed into an AI Image generation model.`}],
       max_tokens: 4000,
     });
     //await SecureStore.setItemAsync(dream.id, JSON.stringify({...route.params.dream, AIDescription: completion.data.choices[0].text}));
@@ -57,17 +59,18 @@ export default function DreamEditor({ navigation, route }: Props) {
     return completion.data.choices[0].message?.content?.trim();
   }
 
-  const generateImage = async(prompt: string) => {
+  const generateImage = async(prompt: string, dream: Dream) => {
     const openai = new OpenAIApi(config);
     const res = await openai.createImage({
       prompt: prompt + ', digital art',
       n: 1,
       size: '512x512'
     });
-
-    return res.data.data[0].url;
+    
+    const fileUri: string = `${FileSystem.documentDirectory}${dream.id}.png`;
+    const downloadedFile: FileSystem.FileSystemDownloadResult = await FileSystem.downloadAsync(res.data.data[0].url!, fileUri);
+    return fileUri;
   }
-
   const saveDream = async(dream: Dream) => {
     await SecureStore.setItemAsync(dream.id, JSON.stringify(dream));
 
@@ -130,7 +133,7 @@ export default function DreamEditor({ navigation, route }: Props) {
               const [rewrittenDream, prompt] = AIresponse!.split('||');
               value.AIDescription = rewrittenDream;
               
-              const imageURL = await generateImage(prompt);
+              const imageURL = await generateImage(prompt, value);
               value.image = imageURL;
 
               setLoading(false);

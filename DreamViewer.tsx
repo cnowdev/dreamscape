@@ -31,7 +31,7 @@ const config = new Configuration({
 
 export default function DreamViewer({ navigation, route }: Props) {
 
- const {id, title, description, useAIDescription, image} = route.params.dream;
+ const {id, title, description, useAIDescription, image, date} = route.params.dream;
  const [AIDescription, setAIDescription] = useState<String>('');
  const [loading, setLoading] = useState<Boolean>(false);
 
@@ -39,7 +39,14 @@ export default function DreamViewer({ navigation, route }: Props) {
 
   setAIDescription(route.params?.dream.AIDescription ?? '');
   console.log(useAIDescription);
+  console.log(image);
   }, [route.params]);
+
+  const dreamDate = new Date(date).toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'numeric',
+    day: 'numeric',
+  });
 
 
 
@@ -68,12 +75,18 @@ export default function DreamViewer({ navigation, route }: Props) {
       <View>
 
         <Text style={styles.title}>{title}</Text>
-        {
-          useAIDescription &&
-          <View style={styles.aiIndicator}>
-            <Text style={styles.aiText}>AI Enhanced</Text>
-          </View>
-        }
+        <View style={styles.badgeContainer}>
+          {
+            useAIDescription &&
+            <View style={styles.aiIndicator}>
+              <Text style={styles.aiText}>AI Enhanced</Text>
+            </View>
+          }
+          <Text style={styles.dateText}>
+              {dreamDate}
+          </Text>
+        </View>
+
 
         <Text style={styles.description}>{
           useAIDescription? AIDescription : description
@@ -187,4 +200,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Quicksand_400Regular',
   },
+  dateText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'gray',
+    marginHorizontal: 0,
+    marginTop: -5,
+    marginBottom: 5,
+    marginLeft: '5%'
+  },
+  badgeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  }
 });

@@ -11,7 +11,10 @@ import { Dream } from './types'
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Configuration, OpenAIApi } from 'openai';
 import { useToast } from "react-native-toast-notifications";
+import * as ImagePicker from 'expo-image-picker'
 const img = require('./assets/placeholder.png');
+import { Divider } from 'react-native-paper';
+import * as FileSystem from 'expo-file-system';
 {/*
   @ts-ignore */}
 import {OPENAI_API_KEY} from '@env'
@@ -41,8 +44,66 @@ export default function ImageEditor({navigation, route}: Props) {
         n: 1,
         size: '512x512'
       });
-  
-      return res.data.data[0].url;
+      
+      const fileUri: string = `${FileSystem.documentDirectory}${dream.id}.png`;
+      const downloadedFile: FileSystem.FileSystemDownloadResult = await FileSystem.downloadAsync(res.data.data[0].url!, fileUri);
+      return fileUri;
+    }
+
+    const onGenerateButtonPress = async() => {
+      if(!prompt){
+        toast.show('Please enter a prompt', {
+          type: 'danger',
+          placement: 'bottom',
+          duration: 2000,
+          animationType: 'slide-in'
+        });
+      } else {
+        try{
+          setLoading(true);
+          dream.image = await generateImage(prompt);
+          await saveDream(dream);
+          setLoading(false);
+
+          navigation.navigate('DreamViewer', {
+            dream: dream,
+          });
+
+        } catch(e) {
+          console.log(e);
+          await saveDream(dream);
+          navigation.navigate('DreamViewer', {
+            dream: dream,
+          });
+        }
+        
+      }
+    } 
+
+    const onUploadButtonPress = async() => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if(!result.canceled){
+        try{
+          dream.image = result.assets[0].uri;
+          await saveDream(dream);
+          
+          navigation.navigate('DreamViewer', {
+            dream: dream,
+          });
+
+        } catch(e) {
+          alert('something went wrong');
+          navigation.navigate('DreamViewer', {
+            dream: dream,
+          });
+
+
+        }
+      }
     }
 
     const saveDream = async(dream: Dream) => {
@@ -84,37 +145,13 @@ export default function ImageEditor({navigation, route}: Props) {
                 multiline={true}
                 numberOfLines={4} 
             />
-            <Pressable style={styles.button} onPress={async() => {
-              if(!prompt){
-                toast.show('Please enter a prompt', {
-                  type: 'danger',
-                  placement: 'bottom',
-                  duration: 2000,
-                  animationType: 'slide-in'
-                });
-              } else {
-                try{
-                  setLoading(true);
-                  dream.image = await generateImage(prompt);
-                  await saveDream(dream);
-                  setLoading(false);
-
-                  navigation.navigate('DreamViewer', {
-                    dream: dream,
-                  });
-
-                } catch(e) {
-                  console.log(e);
-                  await saveDream(dream);
-                  navigation.navigate('DreamViewer', {
-                    dream: dream,
-                  });
-                }
-                const imageURL = generateImage(prompt);
-              }
-
-            }}>
+            <Pressable style={styles.button} onPress={onGenerateButtonPress}>
                 <Text style={styles.buttonText}>Generate</Text>
+            </Pressable>
+
+            <Pressable style={styles.uploadBtn} onPress={onUploadButtonPress}>
+
+                <Text style={styles.buttonText}>Upload your own Image</Text>
             </Pressable>
     
             
@@ -178,6 +215,14 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
       width: 350,
       marginTop: 10,
+    },
+    uploadBtn: {
+      backgroundColor: '#52aae0',
+      borderRadius: 5,
+      padding: 10,
+      alignSelf: 'center',
+      width: 350,
+      marginTop: 40,
     },
     deleteButton: {
       marginTop: 40,
