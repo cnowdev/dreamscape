@@ -52,7 +52,7 @@ export default function DreamEditor({ navigation, route }: Props) {
 
   const generateDreamCont = async() => {
       console.log("calling api...")
-      const response = await fetch('http://10.0.2.2:3000/generate-dream-content', {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/generate-dream-content`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export default function DreamEditor({ navigation, route }: Props) {
 
   const generateImage = async(prompt: string, dream: Dream) => {
     console.log("generating image...");
-    const response = await fetch('http://10.0.2.2:3000/generate-image', {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/generate-image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

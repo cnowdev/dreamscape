@@ -97,7 +97,6 @@ export default function Dreams({ navigation, route }: ProfileProps) {
   }
 
   useEffect( () => {
-
     getDreams();
     
   }, [isFocused]);
