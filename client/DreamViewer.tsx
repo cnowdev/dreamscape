@@ -11,9 +11,6 @@ import { Dream } from './types'
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 const img = require('./assets/placeholder.png');
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
-{/*
-  @ts-ignore */}
-import {OPENAI_API_KEY} from '@env'
 import 'react-native-url-polyfill/auto'
 import { Divider } from 'react-native-paper';
 
@@ -21,10 +18,6 @@ interface Props {
   navigation: navigationProps['navigation'],
   route: RouteProp<{ params: { dream: Dream } }, 'params'>
 }
-
-const config = new Configuration({
-  apiKey: OPENAI_API_KEY,
-});
 
 
 

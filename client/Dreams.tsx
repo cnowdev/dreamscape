@@ -15,9 +15,6 @@ import { getItemAsync, deleteItemAsync } from 'expo-secure-store';
 import { useIsFocused } from '@react-navigation/native'
 import { Dream } from './types';
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-{/* 
-  @ts-ignore */}
-import { OPENAI_API_KEY } from '@env';
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, "Dreams">;
 

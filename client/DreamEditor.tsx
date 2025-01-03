@@ -22,10 +22,11 @@ interface Props {
 export default function DreamEditor({ navigation, route }: Props) {
   const id: string | null = route.params?.dream.id || null;
   const useAIDescription: boolean = route.params?.dream.useAIDescription;
+  const image: string = route.params?.dream.image || '';
   const [title, setTitle] = useState(route.params?.dream.title ?? '');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date());
-  const [AIDescription, setAIDescription] = useState<String>('');
+  const [AIDescription, setAIDescription] = useState<string>('');
 
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +48,22 @@ export default function DreamEditor({ navigation, route }: Props) {
   //   //await SecureStore.setItemAsync(dream.id, JSON.stringify({...route.params.dream, AIDescription: completion.data.choices[0].text}));
     
   //   return completion.data.choices[0].message?.content?.trim();
-  // }
+  // }`
+
+  const generateDreamCont = async() => {
+      console.log("calling api...")
+      const response = await fetch('http://10.0.2.2:3000/generate-dream-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, description })
+      }).then((res) => res.json()).then((data) => {
+        return data.response
+      });
+
+      return response;
+  }
 
   // const generateImage = async(prompt: string, dream: Dream) => {
   //   const openai = new OpenAIApi(config);
@@ -61,6 +77,28 @@ export default function DreamEditor({ navigation, route }: Props) {
   //   const downloadedFile: FileSystem.FileSystemDownloadResult = await FileSystem.downloadAsync(res.data.data[0].url!, fileUri);
   //   return fileUri;
   // }
+
+  const generateImage = async(prompt: string, dream: Dream) => {
+    console.log("generating image...");
+    const response = await fetch('http://10.0.2.2:3000/generate-image', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt })  
+    }).then((res) => res.json()).then((data) => {
+      return data.imageURL;
+    })
+
+    const imageURL = await response;
+
+    const fileUri: string = `${FileSystem.documentDirectory}${dream.id}.png`;
+    const downloadedFile: FileSystem.FileSystemDownloadResult = await FileSystem.downloadAsync(imageURL, fileUri);
+
+    return fileUri;
+  }
+
+  
   const saveDream = async(dream: Dream) => {
     await SecureStore.setItemAsync(dream.id, JSON.stringify(dream));
 
@@ -112,8 +150,10 @@ export default function DreamEditor({ navigation, route }: Props) {
               id: Crypto.randomUUID(),
               title: title,
               description: description,
+              AIDescription: AIDescription,
               useAIDescription: false,
               date: new Date().toISOString(),
+              image: image,
             };
 
 
@@ -138,13 +178,13 @@ export default function DreamEditor({ navigation, route }: Props) {
 
 
           } else {
-
-
             const value: Dream = {
               id: id,
               title: title,
               description: description,
-              useAIDescription: useAIDescription,
+              image: image,
+              AIDescription: AIDescription,
+              useAIDescription: false,
               date: date.toISOString(),
             };
             await SecureStore.setItemAsync(id, JSON.stringify(value));

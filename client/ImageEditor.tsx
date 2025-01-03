@@ -42,6 +42,28 @@ export default function ImageEditor({navigation, route}: Props) {
     //   return fileUri;
     // }
 
+  const generateImage = async(prompt: string, dream: Dream) => {
+    console.log("generating image...");
+    const response = await fetch('http://10.0.2.2:3000/generate-image', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt })  
+    }).then((res) => res.json()).then((data) => {
+      return data.imageURL;
+    })
+
+    const imageURL = await response;
+    console.log(imageURL);
+
+    const fileUri: string = `${FileSystem.documentDirectory}${dream.id}.png`;
+
+    const downloadedFile: FileSystem.FileSystemDownloadResult = await FileSystem.downloadAsync(imageURL, fileUri);
+
+    return fileUri;
+  }
+
     const onGenerateButtonPress = async() => {
       if(!prompt){
         toast.show('Please enter a prompt', {
@@ -53,7 +75,7 @@ export default function ImageEditor({navigation, route}: Props) {
       } else {
         try{
           setLoading(true);
-          dream.image = await generateImage(prompt);
+          dream.image = await generateImage(prompt, dream);
           await saveDream(dream);
           setLoading(false);
 
