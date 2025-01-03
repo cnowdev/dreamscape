@@ -8,10 +8,6 @@ import * as SecureStore from 'expo-secure-store'
 import * as Crypto from 'expo-crypto';
 import { Dream } from './types'
 import { TouchableWithoutFeedback, TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
-{/*
-  @ts-ignore */}
-import {OPENAI_API_KEY} from '@env'
-import { Configuration, OpenAIApi } from 'openai';
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
 

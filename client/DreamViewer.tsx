@@ -9,7 +9,6 @@ import * as SecureStore from 'expo-secure-store'
 import * as Crypto from 'expo-crypto';
 import { Dream } from './types'
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Configuration, OpenAIApi } from 'openai';
 const img = require('./assets/placeholder.png');
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 {/*

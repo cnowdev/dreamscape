@@ -9,25 +9,17 @@ import * as SecureStore from 'expo-secure-store'
 import * as Crypto from 'expo-crypto';
 import { Dream } from './types'
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Configuration, OpenAIApi } from 'openai';
 import { useToast } from "react-native-toast-notifications";
 import * as ImagePicker from 'expo-image-picker'
 const img = require('./assets/placeholder.png');
 import { Divider } from 'react-native-paper';
 import * as FileSystem from 'expo-file-system';
-{/*
-  @ts-ignore */}
-import {OPENAI_API_KEY} from '@env'
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
 interface Props {
     navigation: navigationProps['navigation'],
     route: RouteProp<{ params: { dream: Dream } }, 'params'>
   }
-
-const config = new Configuration({
-  apiKey: OPENAI_API_KEY,
-});
 
 
 export default function ImageEditor({navigation, route}: Props) {
@@ -37,18 +29,18 @@ export default function ImageEditor({navigation, route}: Props) {
     const [loading, setLoading] = useState(false); 
 
 
-    const generateImage = async(prompt: string) => {
-      const openai = new OpenAIApi(config);
-      const res = await openai.createImage({
-        prompt: prompt + ', digital art',
-        n: 1,
-        size: '512x512'
-      });
+    // const generateImage = async(prompt: string) => {
+    //   const openai = new OpenAIApi(config);
+    //   const res = await openai.createImage({
+    //     prompt: prompt + ', digital art',
+    //     n: 1,
+    //     size: '512x512'
+    //   });
       
-      const fileUri: string = `${FileSystem.documentDirectory}${dream.id}.png`;
-      const downloadedFile: FileSystem.FileSystemDownloadResult = await FileSystem.downloadAsync(res.data.data[0].url!, fileUri);
-      return fileUri;
-    }
+    //   const fileUri: string = `${FileSystem.documentDirectory}${dream.id}.png`;
+    //   const downloadedFile: FileSystem.FileSystemDownloadResult = await FileSystem.downloadAsync(res.data.data[0].url!, fileUri);
+    //   return fileUri;
+    // }
 
     const onGenerateButtonPress = async() => {
       if(!prompt){
