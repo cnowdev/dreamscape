@@ -10,7 +10,6 @@ import { Dream } from './types'
 import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as FileSystem from 'expo-file-system';
-import { set } from 'react-native-reanimated';
 
 type navigationProps = NativeStackScreenProps<RootStackParamList, 'DreamEditor'>;
 
@@ -52,6 +51,7 @@ export default function DreamEditor({ navigation, route }: Props) {
 
   const generateDreamCont = async() => {
       console.log("calling api...")
+      console.log(process.env.EXPO_PUBLIC_API_URL);
       const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/generate-dream-content`, {
         method: 'POST',
         headers: {

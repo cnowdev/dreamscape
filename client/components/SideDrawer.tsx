@@ -1,7 +1,7 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { View, Text } from 'react-native';
 import About from '../About'
-import { Ionicons } from '@expo/vector-icons'; 
+import Octicons from '@expo/vector-icons/Octicons';
 import {DrawerActions} from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import DreamEditor from '../DreamEditor';
@@ -28,7 +28,7 @@ export default function SideDrawer() {
         )
       },
       headerLeft: (props) => {
-        return <Ionicons name="md-reorder-three-outline" size={24} color="white" style={{ paddingLeft: 20}} onPress={() => {
+        return <Octicons name="three-bars" size={24} color="white" style={{ paddingLeft: 20}} onPress={() => {
           navigation.openDrawer();
         }} />
       },
