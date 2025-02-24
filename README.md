@@ -61,5 +61,5 @@ Feel free to contribute by submitting issues or creating pull requests.
 This project is licensed under the MIT License.
 
 ## Contact
-For any inquiries, reach out to the project maintainer.
+For any inquiries, feel free to reach out to my email: siddhu.vsss@gmail.com
 
